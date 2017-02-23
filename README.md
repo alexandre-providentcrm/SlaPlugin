@@ -13,7 +13,6 @@ Import the SlaCalculation class plus the folde lib to you project and start to u
  * Time Left
  
 ## TODO
- * Create Sugar Plugin (Manifest/Zip)
  * Create a Samples how to use in Sugar
  * Add More Tests
 
