@@ -1,0 +1,18 @@
+{
+    "name": "alexandretavares/sla-plugin",
+    "authors": [
+        {
+            "name": "Alexandre Tavares",
+            "email": "alexandre@providentcrm.com"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "pear",
+            "url": "http://pear.php.net"
+        }],
+    "require-dev": {
+        "phpunit/phpunit": "^5.7"
+
+    }
+}
