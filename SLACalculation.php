@@ -81,18 +81,18 @@ class SLACalculation
     }
 
     function ajust_start_time($date){
-        $hour = strtotime($date->format('H:i'));
-        $start = strtotime($this->startBusinessHours . ':' . $this->startBusinessMinutes);
-        $end = strtotime($this->finishBusinessHours . ':' . $this->finishBusinessMinutes);
+        $hour = strtotime($date->format('H'));
+        $minutes = strtotime($date->format('i'));
+
         $weekDay = date('w', strtotime($date->format('Y-m-d H:i:s')));
         if ($weekDay == 0 or $weekDay == 6){
-            return $date->setTime(intval($this->startBusinessHours), intval($this->startBusinessMinutes));
+            return $date->setTime(intval($this->start_business_hours), intval($this->start_business_minutes));
         }
-        if ($hour < $start){
-            return $date->setTime(intval($this->startBusinessHours), intval($this->startBusinessMinutes));
+        if ($hour < $this->start_business_hours){
+            return $date->setTime(intval($this->start_business_hours), intval($this->start_business_minutes));
         }
-        if ($hour > $end) {
-            return $date->setTime(intval($this->finishBusinessHours), intval($this->finishBusinessMinutes));
+        if ($hour > $this->finish_business_hours) {
+            return $date->setTime(intval($this->finish_business_hours), intval($this->finish_business_minutes));
         }
 
         return $date;
