@@ -15,7 +15,7 @@ class SLACalculationTest extends PHPUnit_Framework_TestCase
 
     function setUp()
     {
-        $this->sla = new SLACalculation();
+        $this->sla = new SLACalculation('Europe/Dublin','08','00','16','00');
     }
 
     function testSetWrongTimezone(){

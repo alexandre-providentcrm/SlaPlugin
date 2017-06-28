@@ -86,13 +86,13 @@ class SLACalculation
 
         $weekDay = date('w', strtotime($date->format('Y-m-d H:i:s')));
         if ($weekDay == 0 or $weekDay == 6){
-            return $date->setTime(intval($this->start_business_hours), intval($this->start_business_minutes));
+            return $date->setTime(intval($this->startBusinessHours), intval($this->startBusinessMinutes));
         }
-        if ($hour < $this->start_business_hours){
-            return $date->setTime(intval($this->start_business_hours), intval($this->start_business_minutes));
+        if ($hour < $this->startBusinessHours){
+            return $date->setTime(intval($this->startBusinessHours), intval($this->startBusinessMinutes));
         }
-        if ($hour > $this->finish_business_hours) {
-            return $date->setTime(intval($this->finish_business_hours), intval($this->finish_business_minutes));
+        if ($hour > $this->finishBusinessHours) {
+            return $date->setTime(intval($this->finishBusinessHours), intval($this->finishBusinessMinutes));
         }
 
         return $date;
