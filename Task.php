@@ -26,7 +26,7 @@ class Task
     public $businessDayStartHour;
     public $businessDayStartMinute;
     public $businessDayEndHour;
-    public $businessDayEndMinute = "00";
+    public $businessDayEndMinute;
     private $sla;
 
 
@@ -44,9 +44,7 @@ class Task
         $this->serviceLevel = $serviceLevel;
         $this->dueDate = $this->sla->get_sla_overdue_by_hour($createAt, $serviceLevel);
     }
-    public function getValues() {
-        echo var_dump(get_object_vars($this));
-    }
+
     public function setBusinessTime($startAt,$endAt){
 
         $arrayBusinessStart =  $this->splitTime($startAt);
@@ -60,7 +58,8 @@ class Task
     public function lockTime($lockeAT = null, $now = null){
         $this->locked = true;
         $this->lockedAT = $lockeAT == null ? new DateTime() : $lockeAT;
-        $this->duration($now);
+        $this->duration = $this->sla->duration($now, $this->createAt);
+        $this->timeLeft = $this->sla->timeLeft($this->duration, $this->serviceLevel);
         array_push($this->lockedLog, array( "user" => "user1", "created_at" => date_format(new DateTime(), DATE_FORMAT)));
     }
 
@@ -75,39 +74,13 @@ class Task
             $this->dueDate = $this->sla->get_sla_overdue_by_hour($lockeAT,$this->serviceLevel);
         }
 
-
     }
+
+    public function getValues() {
+        echo var_dump(get_object_vars($this));
+    }
+
     private function splitTime($hours){
         return explode(":", $hours);
     }
-
-
-    public function duration($now){
-        if($this->sla->is_valid($now)) {
-            $minutes = $this->sla->getDiffInMinutes($now, $this->createAt);
-            if ($minutes != -1) {
-                $this->duration = $this->sla->convertToHoursMins($minutes, '%02d:%02d');
-
-                $pr_sla_time_left = $this->getTimeDiff($this->duration, $this->serviceLevel);
-
-                $this->timeLeft = $this->sla->convertToHoursMins($pr_sla_time_left, '%02d:%02d');
-            }
-        }
-    }
-
-    function getTimeDiff($dtime,$atime)
-    {
-        $nextDay = $dtime>$atime?1:0;
-        $dep = explode(':',$dtime);
-        $arr = explode(':',$atime);
-        $diff = abs(mktime($dep[0],$dep[1],0,date('n'),date('j'),date('y'))-mktime($arr[0],$arr[1],0,date('n'),date('j')+$nextDay,date('y')));
-        $hours = floor($diff/(60*60));
-        $mins = floor(($diff-($hours*60*60))/(60));
-        $secs = floor(($diff-(($hours*60*60)+($mins*60))));
-        if(strlen($hours)<2){$hours="0".$hours;}
-        if(strlen($mins)<2){$mins="0".$mins;}
-        if(strlen($secs)<2){$secs="0".$secs;}
-        return ($hours *60 ) + $mins;
-    }
-
 }

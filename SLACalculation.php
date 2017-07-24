@@ -201,8 +201,6 @@ class SLACalculation
 
         $hours = intval($interval->format('%H'));
 
-        $minutes = intval($interval->format('%I')) + 60 * $hours;
-
         $sameDay = intval($interval->format('%R%a')) > 0;
 
         $minutes = $this->getDiffInMinutes($now, $dueDate);
@@ -234,6 +232,43 @@ class SLACalculation
         $hours = floor($time / 60);
         $minutes = ($time % 60);
         return sprintf($format, $hours, $minutes);
+    }
+    public function duration($now, $createAt){
+        if($this->is_valid($now)) {
+            $minutes = $this->getDiffInMinutes($now, $createAt);
+            if ($minutes != -1) {
+                return $this->convertToHoursMins($minutes, '%02d:%02d');
+            }
+        }
+    }
+    public function timeLeft($duration, $serviceLevel){
+        $pr_sla_time_left = $this->getTimeDiff($duration, $serviceLevel);
+
+        return $this->convertToHoursMins($pr_sla_time_left, '%02d:%02d');
+    }
+
+    function getTimeDiff($dtime,$atime)
+    {
+        if(!empty($dtime) && !empty($atime)) {
+            $nextDay = $dtime > $atime ? 1 : 0;
+            $dep = explode(':', $dtime);
+            $arr = explode(':', $atime);
+            $diff = abs(mktime($dep[0], $dep[1], 0, date('n'), date('j'), date('y')) - mktime($arr[0], $arr[1], 0,
+                    date('n'), date('j') + $nextDay, date('y')));
+            $hours = floor($diff / (60 * 60));
+            $mins = floor(($diff - ($hours * 60 * 60)) / (60));
+            $secs = floor(($diff - (($hours * 60 * 60) + ($mins * 60))));
+            if (strlen($hours) < 2) {
+                $hours = "0" . $hours;
+            }
+            if (strlen($mins) < 2) {
+                $mins = "0" . $mins;
+            }
+            if (strlen($secs) < 2) {
+                $secs = "0" . $secs;
+            }
+            return ($hours * 60) + $mins;
+        }
     }
 
 
