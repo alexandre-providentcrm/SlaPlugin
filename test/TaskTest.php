@@ -39,7 +39,7 @@ class TaskTest extends PHPUnit_Framework_TestCase
         $lockDate = new DateTime('2017-07-21  09:35:00');
         $task->unlockTime($lockDate);
 
-        $new_time = new DateTime("2017-07-21 12:05:00");
+        $new_time = new DateTime("2017-07-21 12:35:00");
 
         $this->assertEquals($task->dueDate, $new_time);
 
