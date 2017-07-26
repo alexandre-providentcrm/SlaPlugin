@@ -63,4 +63,14 @@ class TaskTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($task->dueDate, $new_time);
     }
+    function testHoursMoorepay(){
+        $createAT = DateTime::createFromFormat(DATE_FORMAT, '2017-07-24 11:56:53');
+
+        $task = new Task("08:31", $createAT,"08:00", "17:30");
+
+        $new_time = new DateTime("2017-07-25 10:57:53");
+
+        $this->assertEquals($task->dueDate, $new_time);
+
+    }
 }

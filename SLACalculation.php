@@ -45,6 +45,7 @@ class SLACalculation
             date_default_timezone_set($this::DEFAULT_TIMEZONE);
         }
     }
+
     function validateTimeZone($timezone){
         return in_array($timezone, DateTimeZone::listIdentifiers());
     }
@@ -119,6 +120,7 @@ class SLACalculation
         }
         return  $date;
     }
+
     function getBusinessTimeLeft($date){
 
         if($this->is_valid($date)){
@@ -132,6 +134,7 @@ class SLACalculation
         return 0;
 
     }
+
     function get_sla_overdue_by_hour($date,$time){
         $times= explode(":", $time);
         $hours = intval($times[0]);
@@ -169,19 +172,21 @@ class SLACalculation
         return "Green";
 
     }
+
     function getDiffTime($from, $to, $format){
 
         $diff = $from->diff($to);
 
         return intval($diff->format($format));
     }
+
     function getDiffInMinutes($from,$to){
 
         $since_start = $from->diff($to);
         $minutes = $since_start->days * 24 * 60;
         $minutes += $since_start->h * 60;
         $minutes += $since_start->i;
-        return $minutes;
+        return intval($since_start->format("%R$minutes"));
     }
 
     function holiday($year){
@@ -233,6 +238,7 @@ class SLACalculation
         $minutes = ($time % 60);
         return sprintf($format, $hours, $minutes);
     }
+
     public function duration($now, $createAt){
         if($this->is_valid($now)) {
             $minutes = $this->getDiffInMinutes($now, $createAt);
@@ -241,6 +247,7 @@ class SLACalculation
             }
         }
     }
+
     public function timeLeft($duration, $serviceLevel){
         $pr_sla_time_left = $this->getTimeDiff($duration, $serviceLevel);
 
@@ -270,6 +277,5 @@ class SLACalculation
             return ($hours * 60) + $mins;
         }
     }
-
 
 }
