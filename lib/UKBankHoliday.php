@@ -1,7 +1,5 @@
 <?php
 
-use JsonSerializable;
-
 class UKBankHoliday implements JsonSerializable {
 
     protected $year;
