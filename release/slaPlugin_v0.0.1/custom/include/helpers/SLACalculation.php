@@ -141,7 +141,6 @@ class SLACalculation
         return "Green";
 
     }
-    
     function getDiffTime($from, $to, $format){
 
         $diff = $from->diff($to);

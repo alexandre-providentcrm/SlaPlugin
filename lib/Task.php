@@ -7,7 +7,6 @@
  * Time: 15:57
  */
 
-define("DATE_FORMAT", "Y-m-d H:i:s");
 require_once "SLACalculation.php";
 date_default_timezone_set(SLACalculation::DEFAULT_TIMEZONE);
 

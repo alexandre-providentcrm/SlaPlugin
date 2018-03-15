@@ -9,6 +9,10 @@
 
 require_once "lib/UKBankHoliday.php";
 
+define("YEAR_FORMAT", "Y");
+define("DATETIME_FORMAT", "Y-m-d H:i:s");
+define("DATE_FORMAT", "Y-m-d");
+define("HOUR_FORMAT", "H:i");
 
 class SLACalculation
 {
@@ -52,24 +56,21 @@ class SLACalculation
 
     function is_business_time($hour){
 
-        $start = strtotime($this->startBusinessHours . ':' . $this->startBusinessMinutes);
-        $end = strtotime($this->finishBusinessHours . ':' . $this->finishBusinessMinutes);
+        $start = strtotime("{$this->startBusinessHours}:{$this->startBusinessMinutes}");
+        $end = strtotime("{$this->finishBusinessHours}:{$this->finishBusinessMinutes}");
 
-        if (($hour > $start) and ($hour <= $end) ){
-            return true;
-        }
-        return false;
+        return ($hour > $start) and ($hour <= $end);
     }
 
     function is_valid($date){
 
-        $weekDay = date('w', strtotime($date->format('Y-m-d H:i:s')));
-        $hour = strtotime($date->format('H:i'));
+        $weekDay = date('w', strtotime($date->format(DATETIME_FORMAT)));
+        $hour = strtotime($date->format(HOUR_FORMAT));
 
         if(!$this->workbankHoliday){
-            $year = $date->format('Y');
+            $year = $date->format(YEAR_FORMAT);
             $holidays = (new UKBankHoliday($year))->all();
-            if(in_array($date->format('Y-m-d'),$holidays)){
+            if(in_array($date->format(DATE_FORMAT),$holidays)){
                 return false;
             }
         }
@@ -85,7 +86,7 @@ class SLACalculation
         $minutes = intval($date->format('i'));
 
         $date->format('Y-m-d H:i:s');
-        $weekDay = date('w', strtotime($date->format('Y-m-d H:i:s')));
+        $weekDay = date('w', strtotime($date->format(DATETIME_FORMAT)));
         if ($weekDay == 0 or $weekDay == 6){
             return $date->setTime(intval($this->startBusinessHours) -1, intval($this->startBusinessMinutes));
         }
@@ -123,10 +124,10 @@ class SLACalculation
     function getBusinessTimeLeft($date){
 
         if($this->is_valid($date)){
-            $date->format('Y-m-d H:i:s');
+            $date->format(DATETIME_FORMAT);
             $business =  clone $date;
             $business->setTime($this->finishBusinessHours, $this->finishBusinessMinutes);
-            $business->format('Y-m-d H:i:s');
+            $business->format(DATETIME_FORMAT);
 
             return 60 - ($this->getDiffInMinutes($date, $business) + intval($date->format('i')));
         }
