@@ -58,10 +58,12 @@ class Task
     }
     public function lockTime($lockeAT = null, $now = null){
         $this->locked = true;
+        $this->status = "Locked";
         $this->lockedAT = $lockeAT == null ? new DateTime() : $lockeAT;
         $this->duration = $this->sla->duration($now, $this->createAt);
         $this->timeLeft = $this->sla->timeLeft($this->duration, $this->serviceLevel);
         array_push($this->lockedLog, array( "user" => "user1", "created_at" => date_format(new DateTime(), DATE_FORMAT)));
+        $this->getValues();
     }
 
     public function unlockTime($lockeAT = null){
@@ -80,7 +82,7 @@ class Task
     public function getStatus($now_db){
 
         $this->timeLeft = $this->sla->getDiffInMinutes($now_db,$this->dueDate );
-        
+
         return $this->timeLeft >= 30 ? "Amber" : "Red";
     }
 

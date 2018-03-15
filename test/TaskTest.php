@@ -101,4 +101,20 @@ class TaskTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($result, "Red");
 
     }
+
+
+
+    function testTaskStatusLocked(){
+        $createAT = DateTime::createFromFormat(DATETIME_FORMAT, '2017-07-21  12:30:00');
+
+        $task = new Task("00:03", $createAT,"13:00", "17:30");
+
+        $lockDate = new DateTime('2017-07-21  12:40:00');
+
+        $task->lockTime($lockDate, $lockDate);
+
+        $this->assertEquals($task->status, "Locked");
+
+    }
+
 }
