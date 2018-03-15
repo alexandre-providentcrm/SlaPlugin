@@ -99,26 +99,6 @@ class SLACalculation
 
     }
 
-    function get_sla_overdue($date,$hours){
-
-        if (strpos($hours, ':') !== false) {
-            return $this->get_sla_overdue_by_hour($date,$hours);
-        }
-
-        $x = 0;
-        if(!$this->is_valid($date)){
-            $date = $this->ajust_start_time($date);
-        }
-        while($hours > $x){
-            $date->modify('+ 1 hour');
-
-            if ($this->is_valid($date)){
-                //echo $date->format('Y-m-d H:i:s') ." <br>";
-                $hours--;
-            }
-        }
-        return  $date;
-    }
     function get_sla_overdue_by_hour($date,$time){
         $times= explode(":", $time);
         $hours = intval($times[0]);
@@ -144,6 +124,7 @@ class SLACalculation
         }
         return  $date;
     }
+
     function getStatusColor($minutes){
         global $sugar_config;
 
@@ -160,6 +141,7 @@ class SLACalculation
         return "Green";
 
     }
+    
     function getDiffTime($from, $to, $format){
 
         $diff = $from->diff($to);

@@ -23,7 +23,7 @@ class SLACalculation
     public $workbankHoliday;
 
 
-    function __construct($timezone = 'Europe/Dublin', $startBusinessHours = "08", $startBusinessMinutes = "00", $finishBusinessHours = "16" , $finishBusinessMinutes = "00" , $workSaturday = false , $workSunday = false, $workbankHoliday = false )
+    function __construct($timezone = 'Europe/Dublin', $startBusinessHours = "09", $startBusinessMinutes = "00", $finishBusinessHours = "17" , $finishBusinessMinutes = "30" , $workSaturday = false , $workSunday = false, $workbankHoliday = false )
     {
         $this->startBusinessHours = $startBusinessHours;
         $this->startBusinessMinutes = $startBusinessMinutes;
@@ -81,19 +81,19 @@ class SLACalculation
     }
 
     function ajust_start_time($date){
-        $hour = strtotime($date->format('H'));
-        $minutes = strtotime($date->format('i'));
-        $minutes;
+        $hour = intval($date->format('H'));
+        $minutes = intval($date->format('i'));
+
         $date->format('Y-m-d H:i:s');
         $weekDay = date('w', strtotime($date->format('Y-m-d H:i:s')));
         if ($weekDay == 0 or $weekDay == 6){
-            return $date->setTime(intval($this->startBusinessHours), intval($this->startBusinessMinutes));
+            return $date->setTime(intval($this->startBusinessHours) -1, intval($this->startBusinessMinutes));
         }
         if ($hour < $this->startBusinessHours){
-            return $date->setTime(intval($this->startBusinessHours), intval($this->startBusinessMinutes));
+            return $date->setTime(intval($this->startBusinessHours) -1, intval($this->startBusinessMinutes));
         }
         if ($hour > $this->finishBusinessHours) {
-            return $date->setTime(intval($this->finishBusinessHours), intval($this->finishBusinessMinutes));
+            return $date->setTime(intval($this->finishBusinessHours) , intval($this->finishBusinessMinutes));
         }
 
         return $date;
@@ -114,7 +114,6 @@ class SLACalculation
             $date->modify('+ 1 hour');
 
             if ($this->is_valid($date)){
-                //echo $date->format('Y-m-d H:i:s') ." <br>";
                 $hours--;
             }
         }
@@ -142,7 +141,7 @@ class SLACalculation
         $dueDate = clone $date;
         $x = 0;
         if(!$this->is_valid($dueDate)){
-            $date = $this->ajust_start_time($dueDate);
+            $dueDate = $this->ajust_start_time($dueDate);
         }
 
         while($minutes > $x){
@@ -156,30 +155,6 @@ class SLACalculation
         return  $dueDate;
     }
 
-    function getStatusColor($minutes){
-        global $sugar_config;
-
-        $amber = $sugar_config['provident']['SLA']['colour']['amber'];
-        $red = $sugar_config['provident']['SLA']['colour']['red'];
-        echo $minutes;
-        if (($minutes <= $amber ) and ($minutes > $red ))
-        {
-            return "Amber";
-        }
-        if ($minutes <= 30 ){
-            return "Red";
-        }
-        return "Green";
-
-    }
-
-    function getDiffTime($from, $to, $format){
-
-        $diff = $from->diff($to);
-
-        return intval($diff->format($format));
-    }
-
     function getDiffInMinutes($from,$to){
 
         $since_start = $from->diff($to);
@@ -187,6 +162,7 @@ class SLACalculation
         $minutes += $since_start->h * 60;
         $minutes += $since_start->i;
         return intval($since_start->format("%R$minutes"));
+
     }
 
     function holiday($year){
@@ -202,31 +178,20 @@ class SLACalculation
             return str_pad($hours,  2, "0") . ":" . str_pad($minutes,  2, "0");
         }
 
-        $interval = $now->diff($dueDate);
-
-        $hours = intval($interval->format('%H'));
-
-        $sameDay = intval($interval->format('%R%a')) > 0;
-
         $minutes = $this->getDiffInMinutes($now, $dueDate);
 
-        if($sameDay || $hours > 8){
-            $interval->format('%R%a %H:%I');
-            $x = 0;
-            $diffMinutes = 0;
+        $x = 0;
+        $diffMinutes = 0;
 
-            while($minutes > $x){
-                $now->modify('+ 1 minute');
+        while($minutes > $x){
+            $now->modify('+ 1 minute');
 
-                if ($this->is_valid($now)){
-                    $diffMinutes++;
-                }
-                $minutes--;
+            if ($this->is_valid($now)){
+                $diffMinutes++;
             }
-            return $this->convertToHoursMins($diffMinutes, '%02d:%02d');
-
+            $minutes--;
         }
-        return $this->convertToHoursMins($minutes, '%02d:%02d');
+        return $this->convertToHoursMins($diffMinutes, '%02d:%02d');
 
     }
 
