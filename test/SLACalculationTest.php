@@ -275,5 +275,5 @@ class SLACalculationTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($timeLeft, '02:20');
 
     }
-    
+
 }

@@ -77,6 +77,13 @@ class Task
 
     }
 
+    public function getStatus($now_db){
+
+        $this->timeLeft = $this->sla->getDiffInMinutes($now_db,$this->dueDate );
+        
+        return $this->timeLeft >= 30 ? "Amber" : "Red";
+    }
+
     public function getValues() {
         echo var_dump(get_object_vars($this));
     }

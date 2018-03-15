@@ -71,12 +71,34 @@ class TaskTest extends PHPUnit_Framework_TestCase
 
     }
 
-    function testNewTaskStatus(){
+    function testTaskStatusNew(){
         $createAT = DateTime::createFromFormat(DATETIME_FORMAT, '2017-07-24 11:56:53');
 
-        $task = new Task(null, $createAT);
+        $task = new Task('01:30', $createAT);
 
         $this->assertEquals($task->status, "New");
+
+    }
+
+    function testTaskStatusAmber(){
+        $createAT = DateTime::createFromFormat(DATETIME_FORMAT, '2017-07-24 11:56:53');
+
+        $task = new Task('01:30', $createAT);
+
+        $result = $task->getStatus(DateTime::createFromFormat(DATETIME_FORMAT, '2017-07-24 12:56:53'));
+
+        $this->assertEquals($result, "Amber");
+
+    }
+
+    function testTaskStatusRed(){
+        $createAT = DateTime::createFromFormat(DATETIME_FORMAT, '2017-07-24 11:56:53');
+
+        $task = new Task('01:15', $createAT);
+
+        $result = $task->getStatus(DateTime::createFromFormat(DATETIME_FORMAT, '2017-07-24 12:56:53'));
+
+        $this->assertEquals($result, "Red");
 
     }
 }
