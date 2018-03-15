@@ -7,11 +7,15 @@
  * Time: 13:50
  */
 
-require_once 'SLACalculation.php';
 
 class SLACalculationTest extends PHPUnit_Framework_TestCase
 {
     protected $sla;
+
+    public static function setUpBeforeClass()
+    {
+        require "lib/SLACalculation.php";
+    }
 
     function setUp()
     {
