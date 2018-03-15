@@ -275,19 +275,5 @@ class SLACalculationTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($timeLeft, '02:20');
 
     }
-
-    function testSLATimeLeftNextDayHoursWithHoursAndMinutesMoorepay()
-    {
-
-        $this->sla = new SLACalculation('Europe/Dublin','08','00','16','30');
-
-        $now = new DateTime("2017-07-11 16:23:00");
-
-        $dueDate = new DateTime("2017-07-12 9:53:00");
-
-        $timeLeft =  $this->sla->getTimeLeftWithBusinessHours($now, $dueDate);
-
-        $this->assertEquals($timeLeft, '02:00');
-
-    }
+    
 }

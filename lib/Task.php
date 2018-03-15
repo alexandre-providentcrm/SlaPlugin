@@ -18,6 +18,7 @@ class Task
     public $timeLeft;
     public $duration;
     public $serviceLevel;
+    public $status;
     public $locked;
     public $lockedAT;
     public $unlockedAT;
@@ -42,6 +43,7 @@ class Task
         $this->unlockedAT = array();
         $this->serviceLevel = $serviceLevel;
         $this->dueDate = $this->sla->get_sla_overdue_by_hour($createAt, $serviceLevel);
+        $this->status = "New";
     }
 
     public function setBusinessTime($startAt,$endAt){
