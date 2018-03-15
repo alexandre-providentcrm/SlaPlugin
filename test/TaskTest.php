@@ -7,7 +7,7 @@
  * Time: 00:26
  */
 
-require_once 'Task.php';
+require_once '../Task.php';
 
 class TaskTest extends PHPUnit_Framework_TestCase
 {
