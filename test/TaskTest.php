@@ -14,10 +14,6 @@ class TaskTest extends PHPUnit_Framework_TestCase
         require "lib/Task.php";
     }
 
-    function setUp()
-    {
-
-    }
     function testSLABasicDueDate(){
 
         $createAT = DateTime::createFromFormat(DATETIME_FORMAT, '2017-07-21  09:00:00');
@@ -47,8 +43,6 @@ class TaskTest extends PHPUnit_Framework_TestCase
 
     }
 
-
-
     function testSLALockBeforeBusinessHours(){
         $createAT = DateTime::createFromFormat(DATETIME_FORMAT, '2017-07-21  12:30:00');
 
@@ -65,6 +59,7 @@ class TaskTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($task->dueDate, $new_time);
     }
+
     function testHoursMoorepay(){
         $createAT = DateTime::createFromFormat(DATETIME_FORMAT, '2017-07-24 11:56:53');
 
